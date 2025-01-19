@@ -33,10 +33,10 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
-import { useArchive } from "@/hooks/use-archive";
+// import { useArchive } from "@/hooks/use-archive";
 import { Spinner } from "./Spinner";
 import { ArchivedLabel } from "@/components/ArchivedLabel";
-import { owner } from "@/helpers";
+import { handleArchive, owner } from "@/helpers";
 
 import {
 	Pagination,
@@ -47,6 +47,10 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+// import { handler } from "tailwindcss-animate";
+// import { queryClient } from "@/client";
 
 export function PaginationDemo() {
 	return (
@@ -153,9 +157,20 @@ export const columns: ColumnDef<GithubRepository>[] = [
 		id: "actions",
 		enableHiding: false,
 		cell: ({ row }) => {
-			const { handler, isLoading } = useArchive();
+			const queryClient = useQueryClient();
+			const { mutate, isPending } = useMutation({
+				mutationFn: async (repoName: string) => await handleArchive(repoName),
+				onSuccess: async () => {
+					await queryClient.refetchQueries({ queryKey: ["repos"] });
 
-			return isLoading ? (
+					toast("Repository has been archived.");
+				},
+				onError: () => {
+					toast("Error");
+				},
+			});
+
+			return isPending ? (
 				<Spinner />
 			) : (
 				<DropdownMenu>
@@ -167,9 +182,7 @@ export const columns: ColumnDef<GithubRepository>[] = [
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem
-							onClick={async () => await handler(row.original.repo)}
-						>
+						<DropdownMenuItem onClick={async () => mutate(row.original.repo)}>
 							Archive
 						</DropdownMenuItem>
 					</DropdownMenuContent>
