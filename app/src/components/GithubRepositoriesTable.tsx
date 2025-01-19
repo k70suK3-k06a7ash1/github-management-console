@@ -36,6 +36,7 @@ import { useState } from "react";
 import { useArchive } from "@/hooks/use-archive";
 import { Spinner } from "./Spinner";
 import { ArchivedLabel } from "@/components/ArchivedLabel";
+import { owner } from "@/helpers";
 export type GithubRepository = {
 	id: number;
 	visibility: string;
@@ -86,7 +87,18 @@ export const columns: ColumnDef<GithubRepository>[] = [
 				</Button>
 			);
 		},
-		cell: ({ row }) => <div className="lowercase">{row.getValue("repo")}</div>,
+		cell: ({ row }) => (
+			<div className="lowercase">
+				<a
+					href={`https://github.com/${owner}/${row.getValue("repo")}`}
+					target="_blank"
+					rel="noreferrer"
+					className="cursor-pointer underline"
+				>
+					{row.getValue("repo")}
+				</a>
+			</div>
+		),
 	},
 	{
 		accessorKey: "isArchived",
