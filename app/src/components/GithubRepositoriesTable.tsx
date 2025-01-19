@@ -33,7 +33,6 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { useState } from "react";
-// import { useArchive } from "@/hooks/use-archive";
 import { Spinner } from "./Spinner";
 import { ArchivedLabel } from "@/components/ArchivedLabel";
 import { handleArchive, owner } from "@/helpers";
@@ -49,8 +48,6 @@ import {
 } from "@/components/ui/pagination";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-// import { handler } from "tailwindcss-animate";
-// import { queryClient } from "@/client";
 
 export function PaginationDemo() {
 	return (

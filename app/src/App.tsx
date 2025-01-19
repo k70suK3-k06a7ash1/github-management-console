@@ -7,7 +7,7 @@ import { getAllRepositories } from "./helpers";
 import { useQuery } from "@tanstack/react-query";
 
 function App() {
-	const { isLoading, data } = useQuery({
+	const { isLoading, data, isRefetching } = useQuery({
 		queryKey: ["repos"],
 		queryFn: async () => {
 			const repos = await getAllRepositories();
@@ -20,13 +20,15 @@ function App() {
 			return dataSorce;
 		},
 	});
+	console.log({ isRefetching });
 
 	if (isLoading) return <Spinner />;
 
 	return (
 		<main className="container mx-auto">
 			<h1 className="text-2xl py-4">Github Repository Manager</h1>
-			<GithubRepositoriesTable rows={data ?? []} />
+			{/* keyを更新し、仮想DOMを再計算する */}
+			<GithubRepositoriesTable key={String(isRefetching)} rows={data ?? []} />
 		</main>
 	);
 }
