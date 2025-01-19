@@ -1,7 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { getAllRepositories } from "../helpers";
 
-import { useQuery } from "@tanstack/react-query";
+import {
+	useQuery,
+	useSuspenseQueries,
+	useSuspenseQuery,
+} from "@tanstack/react-query";
 import {
 	type ColumnDef,
 	type ColumnFiltersState,
@@ -157,17 +161,20 @@ export const columns: ColumnDef<GithubRepository>[] = [
 		enableHiding: false,
 		cell: ({ row }) => {
 			const queryClient = useQueryClient();
-			const { mutate, isPending } = useMutation({
-				mutationFn: async (repoName: string) => await handleArchive(repoName),
-				onSuccess: async () => {
-					await queryClient.refetchQueries({ queryKey: ["repos"] });
+			const { mutate, isPending } = useMutation(
+				{
+					mutationFn: async (repoName: string) => await handleArchive(repoName),
+					onSuccess: async () => {
+						await queryClient.refetchQueries({ queryKey: ["repos"] });
 
-					toast("Repository has been archived.");
+						toast("Repository has been archived.");
+					},
+					onError: () => {
+						toast("Error");
+					},
 				},
-				onError: () => {
-					toast("Error");
-				},
-			});
+				queryClient,
+			);
 
 			return isPending ? (
 				<Spinner />
@@ -192,7 +199,7 @@ export const columns: ColumnDef<GithubRepository>[] = [
 ];
 
 export function GithubRepositoriesTable() {
-	const { isLoading, data } = useQuery({
+	const { data } = useSuspenseQuery({
 		queryKey: ["repos"],
 		queryFn: async () => {
 			const repos = await getAllRepositories();
@@ -235,8 +242,6 @@ export function GithubRepositoriesTable() {
 			},
 		},
 	});
-
-	if (isLoading) return <Spinner />;
 
 	return (
 		<div className="w-full">
