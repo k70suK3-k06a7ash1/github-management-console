@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { getAllRepositories } from "../helpers";
 
+import { useQuery } from "@tanstack/react-query";
 import {
 	type ColumnDef,
 	type ColumnFiltersState,
@@ -189,16 +191,30 @@ export const columns: ColumnDef<GithubRepository>[] = [
 	},
 ];
 
-export function GithubRepositoriesTable({
-	rows,
-}: { rows: GithubRepository[] }) {
+export function GithubRepositoriesTable() {
+	const { isLoading, data } = useQuery({
+		queryKey: ["repos"],
+		queryFn: async () => {
+			const repos = await getAllRepositories();
+			const dataSorce: GithubRepository[] = repos?.map((e) => ({
+				id: e.id,
+				isArchived: e.archived ?? false,
+				repo: e.name,
+				visibility: e.visibility ?? "unknown",
+			}));
+			console.log({ dataSorce });
+			return dataSorce;
+		},
+		networkMode: "online",
+	});
+
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = useState({});
 
 	const table = useReactTable({
-		data: rows,
+		data: data ?? [],
 		columns,
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
@@ -219,6 +235,8 @@ export function GithubRepositoriesTable({
 			},
 		},
 	});
+
+	if (isLoading) return <Spinner />;
 
 	return (
 		<div className="w-full">

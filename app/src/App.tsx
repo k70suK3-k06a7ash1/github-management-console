@@ -1,36 +1,13 @@
-import { Spinner } from "@/components/Spinner";
-import {
-	GithubRepositoriesTable,
-	type GithubRepository,
-} from "./components/GithubRepositoriesTable";
-import { getAllRepositories } from "./helpers";
-import { useQuery } from "@tanstack/react-query";
+import { Suspense } from "react";
+import { GithubRepositoriesTable } from "./components/GithubRepositoriesTable";
 
 function App() {
-	const { isLoading, data, isRefetching } = useQuery({
-		queryKey: ["repos"],
-		queryFn: async () => {
-			const repos = await getAllRepositories();
-			const dataSorce: GithubRepository[] = repos?.map((e) => ({
-				id: e.id,
-				isArchived: e.archived ?? false,
-				repo: e.name,
-				visibility: e.visibility ?? "unknown",
-			}));
-			console.log({ dataSorce });
-			return dataSorce;
-		},
-		networkMode: "online",
-	});
-	console.log({ isRefetching });
-
-	if (isLoading) return <Spinner />;
-
 	return (
 		<main className="container mx-auto">
 			<h1 className="text-2xl py-4">Github Repository Manager</h1>
-			{/* keyを更新し、仮想DOMを再計算する */}
-			<GithubRepositoriesTable rows={data ?? []} />
+			<Suspense>
+				<GithubRepositoriesTable />
+			</Suspense>
 		</main>
 	);
 }
