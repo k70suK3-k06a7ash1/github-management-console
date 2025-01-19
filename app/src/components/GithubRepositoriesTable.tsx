@@ -1,11 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { getAllRepositories } from "../helpers";
 
-import {
-	useQuery,
-	useSuspenseQueries,
-	useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
 	type ColumnDef,
 	type ColumnFiltersState,
@@ -38,7 +34,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
+import { type Dispatch, useState } from "react";
 import { Spinner } from "./Spinner";
 import { ArchivedLabel } from "@/components/ArchivedLabel";
 import { handleArchive, owner } from "@/helpers";
@@ -52,7 +48,7 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from "@/components/ui/pagination";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export function PaginationDemo() {
@@ -91,7 +87,9 @@ export type GithubRepository = {
 	isArchived: boolean;
 };
 
-export const columns: ColumnDef<GithubRepository>[] = [
+export const columns = (
+	handleMutate: Dispatch<string>,
+): ColumnDef<GithubRepository>[] => [
 	{
 		id: "select",
 		header: ({ table }) => (
@@ -160,21 +158,7 @@ export const columns: ColumnDef<GithubRepository>[] = [
 		id: "actions",
 		enableHiding: false,
 		cell: ({ row }) => {
-			const queryClient = useQueryClient();
-			const { mutate, isPending } = useMutation({
-				mutationFn: async (repoName: string) => await handleArchive(repoName),
-				onSuccess: async () => {
-					await queryClient.invalidateQueries({ queryKey: ["repos"] });
-					toast("Repository has been archived.");
-				},
-				onError: () => {
-					toast("Error");
-				},
-			});
-
-			return isPending ? (
-				<Spinner />
-			) : (
+			return (
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button variant="ghost" className="h-8 w-8 p-0">
@@ -184,7 +168,9 @@ export const columns: ColumnDef<GithubRepository>[] = [
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem onClick={async () => mutate(row.original.repo)}>
+						<DropdownMenuItem
+							onClick={async () => handleMutate(row.original.repo)}
+						>
 							Archive
 						</DropdownMenuItem>
 					</DropdownMenuContent>
@@ -195,7 +181,7 @@ export const columns: ColumnDef<GithubRepository>[] = [
 ];
 
 export function GithubRepositoriesTable() {
-	const { data } = useSuspenseQuery({
+	const { data, refetch } = useQuery({
 		queryKey: ["repos"],
 		queryFn: async () => {
 			const repos = await getAllRepositories();
@@ -205,20 +191,32 @@ export function GithubRepositoriesTable() {
 				repo: e.name,
 				visibility: e.visibility ?? "unknown",
 			}));
-			console.log({ dataSorce });
 			return dataSorce;
 		},
-		networkMode: "online",
 	});
+
+	const { mutate, isPending } = useMutation({
+		mutationFn: async (repoName: string) => await handleArchive(repoName),
+		onSuccess: async () => {
+			await refetch();
+			toast("Repository has been archived.");
+		},
+		onError: () => {
+			toast("Error");
+		},
+	});
+
+	const handleMutate = (repoName: string) => mutate(repoName);
 
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = useState({});
 
+	console.log({ data });
 	const table = useReactTable({
 		data: data ?? [],
-		columns,
+		columns: columns(handleMutate),
 		onSortingChange: setSorting,
 		onColumnFiltersChange: setColumnFilters,
 		getCoreRowModel: getCoreRowModel(),
@@ -238,6 +236,8 @@ export function GithubRepositoriesTable() {
 			},
 		},
 	});
+
+	if (isPending) return <Spinner />;
 
 	return (
 		<div className="w-full">
