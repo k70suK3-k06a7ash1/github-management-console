@@ -9,7 +9,10 @@ export const useArchive = () => {
             setIsLoading(true)
            await  handleArchive(repoName)
            toast("Repository has been archived.")
-        }catch(_e){}finally{
+        }catch(e){
+            const typedError = e as Error
+            console.error(typedError.message)
+        }finally{
             setIsLoading(false)
         }
     }
