@@ -213,6 +213,10 @@ export function GithubRepositoriesTable({
 			columnFilters,
 			columnVisibility,
 			rowSelection,
+			pagination: {
+				pageIndex: 0,
+				pageSize: 200,
+			},
 		},
 	});
 

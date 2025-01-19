@@ -28,7 +28,7 @@ function App() {
 		<main className="container mx-auto">
 			<h1 className="text-2xl py-4">Github Repository Manager</h1>
 			{/* keyを更新し、仮想DOMを再計算する */}
-			<GithubRepositoriesTable key={String(isRefetching)} rows={data ?? []} />
+			<GithubRepositoriesTable rows={data ?? []} />
 		</main>
 	);
 }
