@@ -161,20 +161,16 @@ export const columns: ColumnDef<GithubRepository>[] = [
 		enableHiding: false,
 		cell: ({ row }) => {
 			const queryClient = useQueryClient();
-			const { mutate, isPending } = useMutation(
-				{
-					mutationFn: async (repoName: string) => await handleArchive(repoName),
-					onSuccess: async () => {
-						await queryClient.refetchQueries({ queryKey: ["repos"] });
-
-						toast("Repository has been archived.");
-					},
-					onError: () => {
-						toast("Error");
-					},
+			const { mutate, isPending } = useMutation({
+				mutationFn: async (repoName: string) => await handleArchive(repoName),
+				onSuccess: async () => {
+					await queryClient.invalidateQueries({ queryKey: ["repos"] });
+					toast("Repository has been archived.");
 				},
-				queryClient,
-			);
+				onError: () => {
+					toast("Error");
+				},
+			});
 
 			return isPending ? (
 				<Spinner />
