@@ -35,10 +35,12 @@ import {
 import { useState } from "react";
 import { useArchive } from "@/hooks/use-archive";
 import { Spinner } from "./Spinner";
+import { ArchivedLabel } from "@/components/ArchivedLabel";
 export type GithubRepository = {
 	id: number;
 	visibility: string;
 	repo: string;
+	isArchived: boolean;
 };
 
 export const columns: ColumnDef<GithubRepository>[] = [
@@ -85,6 +87,14 @@ export const columns: ColumnDef<GithubRepository>[] = [
 			);
 		},
 		cell: ({ row }) => <div className="lowercase">{row.getValue("repo")}</div>,
+	},
+	{
+		accessorKey: "isArchived",
+		cell: ({ row }) => (
+			<div className="lowercase">
+				{row.getValue("isArchived") ? <ArchivedLabel /> : <></>}
+			</div>
+		),
 	},
 
 	{
