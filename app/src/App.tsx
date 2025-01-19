@@ -17,8 +17,10 @@ function App() {
 				repo: e.name,
 				visibility: e.visibility ?? "unknown",
 			}));
+			console.log({ dataSorce });
 			return dataSorce;
 		},
+		networkMode: "online",
 	});
 	console.log({ isRefetching });
 
