@@ -23,7 +23,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-//   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
@@ -36,6 +35,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { useState } from 'react';
+import { useArchive } from '@/hooks/use-archive';
+import { Spinner } from './Spinner';
 export type GithubRepository = {
     id: number
     visibility:string
@@ -92,9 +93,10 @@ export type GithubRepository = {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-  
+        const {handler,isLoading} = useArchive()
+
         return (
-          <DropdownMenu>
+            isLoading ? <Spinner /> : <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
@@ -104,7 +106,7 @@ export type GithubRepository = {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(row.id)}
+                onClick={async() => await handler(row.original.repo)}
               >
                 Archive
               </DropdownMenuItem>

@@ -2,6 +2,7 @@ import { useEffect ,useState} from 'react'
 
 import { GithubRepositoriesTable, GithubRepository } from './components/GithubRepositoriesTable';
 import { getAllRepositories } from './helpers';
+import { Spinner } from './components/Spinner';
 
 function App() {
   const [repos ,setRepos] = useState<GithubRepository[]>([])

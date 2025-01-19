@@ -1,7 +1,8 @@
 import { Octokit } from 'octokit';
 
-const octokit = new Octokit({ auth: import.meta.env.VITE_APP_GITHUB_TOKEN });
+export const octokit = new Octokit({ auth: import.meta.env.VITE_APP_GITHUB_TOKEN });
 
+const owner = import.meta.env.VITE_APP_USER_NAME
 
 type RepoData = Awaited<
   ReturnType<
@@ -18,7 +19,7 @@ const fetchAllRepositories = async (
   const response = await octokit.rest.repos.listForUser({
     per_page: perPage,
     page,
-    username:import.meta.env.VITE_APP_USER_NAME
+    username:owner
   });
 
   if (response.data.length === 0) {
@@ -39,3 +40,21 @@ export const getAllRepositories = async (): Promise<RepoData> => {
     return [];
     }
 };
+
+ const archiveRepository = (octokit: Octokit) => (owner: string) =>   async (
+    repo: string
+): Promise<void> => {
+  try {
+    await octokit.rest.repos.update({
+      owner,
+      repo,
+      archived: true,
+    });
+    console.log(`Repository ${owner}/${repo} archived successfully.`);
+  } catch (error) {
+    console.error(`Failed to archive repository ${owner}/${repo}:`, error);
+    throw error; // エラーを再スローして、呼び出し元で処理できるようにする
+  }
+};
+
+export const handleArchive = archiveRepository(octokit)(owner)
