@@ -41,7 +41,8 @@ The application requires a GitHub personal access token to access the GitHub API
 Create a `.env` file in the root directory with the following content:
 
 ```
-GITHUB_TOKEN=<your_github_token>
+VITE_APP_GITHUB_TOKEN=<your_github_token>
+VITE_APP_USER_NAME=<your_github_user_name>
 ```
 
 Replace `<your_github_token>` with your actual GitHub personal access token.
