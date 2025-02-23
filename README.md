@@ -53,3 +53,10 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request.
+
+## Personal Access Tokens (PAT)
+
+This project uses Personal Access Tokens (PAT) for authentication with GitHub. PATs are required to access both public and private repositories.
+
+- This applies to all current and future repositories you own.
+- Includes public repositories (read-only).
