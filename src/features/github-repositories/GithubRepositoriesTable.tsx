@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { getAllRepositories } from "../helpers";
+import { Button } from "@/shared/ui/button";
 
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -16,7 +15,7 @@ import {
 } from "@tanstack/react-table";
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/shared/ui/checkbox";
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -24,8 +23,8 @@ import {
 	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+} from "@/shared/ui/dropdown-menu";
+import { Input } from "@/shared/ui/input";
 import {
 	Table,
 	TableBody,
@@ -33,11 +32,8 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from "@/components/ui/table";
+} from "@/shared/ui/table";
 import { type Dispatch, useState } from "react";
-import { Spinner } from "./Spinner";
-import { ArchivedLabel } from "@/components/ArchivedLabel";
-import { handleArchive, owner } from "@/helpers";
 
 import {
 	Pagination,
@@ -47,33 +43,40 @@ import {
 	PaginationLink,
 	PaginationNext,
 	PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "@/shared/ui/pagination";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { ArchivedLabel } from "@/features/archived-label/ArchivedLabel";
+import { Spinner } from "@/features/spinner/Spinner";
+import { owner, getAllRepositories, handleArchive } from "@/shared/helpers";
 
 export function PaginationDemo() {
 	return (
 		<Pagination>
 			<PaginationContent>
 				<PaginationItem>
-					<PaginationPrevious href="#" />
+					<PaginationPrevious href="#" size={undefined} />
 				</PaginationItem>
 				<PaginationItem>
-					<PaginationLink href="#">1</PaginationLink>
+					<PaginationLink href="#" size={undefined}>
+						1
+					</PaginationLink>
 				</PaginationItem>
 				<PaginationItem>
-					<PaginationLink href="#" isActive>
+					<PaginationLink href="#" isActive size={undefined}>
 						2
 					</PaginationLink>
 				</PaginationItem>
 				<PaginationItem>
-					<PaginationLink href="#">3</PaginationLink>
+					<PaginationLink href="#" size={undefined}>
+						3
+					</PaginationLink>
 				</PaginationItem>
 				<PaginationItem>
 					<PaginationEllipsis />
 				</PaginationItem>
 				<PaginationItem>
-					<PaginationNext href="#" />
+					<PaginationNext href="#" size={undefined} />
 				</PaginationItem>
 			</PaginationContent>
 		</Pagination>
