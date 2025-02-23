@@ -349,7 +349,6 @@ export function GithubRepositoriesTable() {
 					>
 						Next
 					</Button>
-					{/* <PaginationDemo /> */}
 				</div>
 			</div>
 		</div>
