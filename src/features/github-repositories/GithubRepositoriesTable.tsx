@@ -216,8 +216,6 @@ export function GithubRepositoriesTable() {
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = useState({});
 
-	console.log("data:", data);
-
 	const table = useReactTable({
 		data: data ?? [],
 		columns: columns(handleMutate),
