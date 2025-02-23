@@ -22,7 +22,7 @@ jobs:
     - name: Install Dependencies
       run: bun install
     - name: Run Tests
-      run: bun test
+      run: bun run test
     - name: Lint
       run: bun run lint
     - name: Build
