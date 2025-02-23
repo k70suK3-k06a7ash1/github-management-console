@@ -187,7 +187,7 @@ export function GithubRepositoriesTable() {
 	const { data, refetch } = useQuery({
 		queryKey: ["repos"],
 		queryFn: async () => {
-			const repos = await getAllRepositories();
+			const repos = await getAllRepositories(owner)();
 			const dataSorce: GithubRepository[] = repos?.map((e) => ({
 				id: e.id,
 				isArchived: e.archived ?? false,

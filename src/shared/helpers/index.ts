@@ -10,36 +10,44 @@ type RepoData = Awaited<
 	ReturnType<Octokit["rest"]["repos"]["listForUser"]>
 >["data"];
 
-const fetchAllRepositories = async (
-	octokit: Octokit,
-	page: number,
-	perPage: number,
-	accumulator: RepoData = [],
-): Promise<RepoData> => {
-	const response = await octokit.rest.repos.listForUser({
-		per_page: perPage,
-		page,
-		username: owner,
-	});
+const fetchAllRepositories =
+	(owner: string) =>
+	async (
+		octokit: Octokit,
+		page: number,
+		perPage: number,
+		accumulator: RepoData = [],
+	): Promise<RepoData> => {
+		const response = await octokit.rest.repos.listForUser({
+			per_page: perPage,
+			page,
+			username: owner,
+		});
 
-	if (response.data.length === 0) {
-		return accumulator;
-	}
-	const newAccumulator = [...accumulator, ...response.data];
-	return fetchAllRepositories(octokit, page + 1, perPage, newAccumulator);
-};
+		if (response.data.length === 0) {
+			return accumulator;
+		}
+		const newAccumulator = [...accumulator, ...response.data];
+		return fetchAllRepositories(owner)(
+			octokit,
+			page + 1,
+			perPage,
+			newAccumulator,
+		);
+	};
 
 // エントリーポイント関数
-export const getAllRepositories = async (): Promise<RepoData> => {
-	const initialPage = 1;
-	const perPage = 100;
-	try {
-		return await fetchAllRepositories(octokit, initialPage, perPage);
-	} catch (error) {
-		console.error("An error occurred:", error);
-		return [];
-	}
-};
+export const getAllRepositories =
+	(owner: string) => async (): Promise<RepoData> => {
+		const initialPage = 1;
+		const perPage = 100;
+		try {
+			return await fetchAllRepositories(owner)(octokit, initialPage, perPage);
+		} catch (error) {
+			console.error("An error occurred:", error);
+			return [];
+		}
+	};
 
 const archiveRepository =
 	(octokit: Octokit) =>
