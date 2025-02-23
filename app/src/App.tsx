@@ -1,7 +1,7 @@
 import { Suspense, useEffect } from "react";
-import { GithubRepositoriesTable } from "./components/GithubRepositoriesTable";
-import { Spinner } from "@/components/Spinner";
-import { getAllRepositories } from "@/helpers";
+import { GithubRepositoriesTable } from "./features/github-repositories/GithubRepositoriesTable";
+import { Spinner } from "./features/spinner/Spinner";
+import { getAllRepositories } from "./shared/helpers";
 
 function App() {
 	useEffect(() => {
