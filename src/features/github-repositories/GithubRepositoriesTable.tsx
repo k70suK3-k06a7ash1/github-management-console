@@ -90,7 +90,7 @@ export type GithubRepository = {
 	isArchived: boolean;
 };
 
-export const columns = (
+const columns = (
 	handleMutate: Dispatch<string>,
 ): ColumnDef<GithubRepository>[] => [
 	{
