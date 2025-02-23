@@ -6,7 +6,6 @@ import { getAllRepositories } from "./shared/helpers";
 function App() {
 	useEffect(() => {
 		(async () => {
-			console.log("run");
 			const repos = await getAllRepositories();
 			console.log({ repos });
 		})();
