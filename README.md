@@ -1,50 +1,55 @@
-# React + TypeScript + Vite
+# GitHub Management Console
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web application for managing GitHub repositories.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+*   List GitHub repositories
+*   Archive repositories
+*   Search repositories
 
-## Expanding the ESLint configuration
+## Technologies Used
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+*   React
+*   TypeScript
+*   Tailwind CSS
+*   Vite
 
-- Configure the top-level `parserOptions` property like this:
+## Getting Started
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+1.  Clone the repository:
+
+    ```bash
+    git clone <repository-url>
+    ```
+2.  Install dependencies:
+
+    ```bash
+    bun install
+    ```
+3.  Start the development server:
+
+    ```bash
+    bun run dev
+    ```
+4.  Open your browser and navigate to `http://localhost:5173`.
+
+## Environment Variables
+
+The application requires a GitHub personal access token to access the GitHub API.
+
+Create a `.env` file in the root directory with the following content:
+
+```
+GITHUB_TOKEN=<your_github_token>
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+Replace `<your_github_token>` with your actual GitHub personal access token.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## License
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request.
